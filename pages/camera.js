@@ -47,8 +47,11 @@ const ImageClassifier = () => {
 			const segmentation = await net.segmentPerson(img);
 			if (segmentation?.allPoses[0]) {
 				let posXReversed = (figures.current.innerText = segmentation.allPoses[0].keypoints[0].position.x);
-				let posXPercentage = ((resizeWidth - posXReversed) * 100) / resizeWidth;
+				let posXPercentage = (resizeWidth - posXReversed) / resizeWidth;
 				figures.current.innerText = posXPercentage.toFixed(2) + "%";
+				let youn = document.getElementById("youn");
+				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+				youn.setAttribute("style", `position: absolute; left:${deviceWidth * posXPercentage}px; height: 300px`);
 			}
 
 			img.dispose();
@@ -63,7 +66,7 @@ const ImageClassifier = () => {
 	}, [camera]);
 
 	return (
-		<React.Fragment>
+		<div style={{ display: "flex", flexDirection: "column" }}>
 			<div ref={figures} style={{ fontSize: 30 }}></div>
 			<video
 				autoPlay
@@ -77,7 +80,8 @@ const ImageClassifier = () => {
 					WebkitTransform: "scaleX(-1)",
 				}}
 			/>
-		</React.Fragment>
+			<video autoPlay loop src="/youn.mp4" muted={true} height="300" style={{ position: "absolute", left: 0 }} id="youn" />
+		</div>
 	);
 };
 
