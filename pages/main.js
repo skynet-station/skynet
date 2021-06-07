@@ -1,51 +1,34 @@
- import React, {useState, useEffect, useRef} from 'react';
- import socketIOClient from 'socket.io-client';
-
+import React, {useState, useEffect, useRef} from 'react';
+import AudioStreamer from '../lib/AudioHandler';
 
 const Main = () => {
-    let socket;
 
-    const [audio, setAudio] = useState(null)
-    const audioRef = useRef()
+    const [recording, setRecording] = useState(false)
+    const [text, setText] = useState("")
 
+    function startRecording () {
+        setRecording(true)
+        AudioStreamer.initRecording((data) => {
+           setText(data.results[0].alternatives[0].transcript)
+        }, (error) => {
+            console.error('Error when recording', error);
+            setRecording(false)
+        });
+    }
 
-    useEffect(() => {
-        socket = socketIOClient('ws://localhost:3000', { transports: ['websocket']});
-    },[])
-
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(stream => {
-            const recorder = new MediaRecorder(stream);
-
-        // fires every one second and passes an BlobEvent
-            recorder.ondataavailable = event => {
-
-                // get the Blob from the event
-                const blob = event.data;
-                socket.emit('stt', blob)
-
-                // and send that blob to the server...
-            };
-
-            // make data available event fire every one second
-            recorder.start(1000);
-        }).catch(e => console.log(e));
-    }, [])
-
-        
-
-
+    function stop() {
+        setRecording(false)
+        AudioStreamer.stopRecording();
+    }
+    
   return (
       <div> 
-        <audio style={{position: 'absolute', right: 0, bottom:'20%',transform:"scale(-1,1)"}}
-            width={'120px'}
-            height={'120px'}
-            ref={audioRef}
-            id={"audio"}
-            autoPlay
-        />
+        <button onClick={() => startRecording()}> Start Recording </button>
+        <button onClick={() => stop()}> End Recording </button>
+        <h1> {text} </h1>
     </div>
   );
 };
 
 export default Main;
+
