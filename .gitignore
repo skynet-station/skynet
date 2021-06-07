@@ -4,6 +4,8 @@
 # Dependency directories
 node_modules/
 
+public/*
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
