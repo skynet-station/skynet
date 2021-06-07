@@ -8,6 +8,10 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const port = 3000;
 
+const env = process.env.DOT_ENV || process.env.NODE_ENV || 'local';
+require('dotenv').config({ path: './.env' })
+
+
 app.prepare().then(() => {
     const server = createServer( (req, res) => {
 		// Be sure to pass `true` as the second argument to `url.parse`.

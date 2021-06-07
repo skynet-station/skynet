@@ -1,4 +1,6 @@
 
+const {startStreamRecognition, stopStreamRecognition, receiveAudioData} = require('./stt')
+
 
 module.exports = function (http) {
 	io = require('socket.io')(http);
@@ -6,12 +8,19 @@ module.exports = function (http) {
 	io.on('connection', (socket) => {
 		console.log(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }), 'a user connected.', "connected clients", io.engine.clientsCount, socket.id);
 
-		socket.on('stt', async req => {
-			console.log("mov_make", req);
+		socket.on('startStream', function() {
+			console.log('starting recognition')
+			startStreamRecognition(socket);
+		});
 
-			console.log('do some processing with audio....')
-			socket.emit('request_audio')
-			
+		// Receive audio data
+		socket.on('getAudioData', function(data) {
+			receiveAudioData(data);
+		});
+
+		// End the audio stream
+		socket.on('endStream', function() {
+			stopStreamRecognition();	
 		});
 	});
 
