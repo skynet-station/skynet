@@ -8,6 +8,9 @@ module.exports = function (http) {
 
 		socket.on('stt', async req => {
 			console.log("mov_make", req);
+
+			console.log('do some processing with audio....')
+			socket.emit('request_audio')
 			
 		});
 	});
