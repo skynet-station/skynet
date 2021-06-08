@@ -75,9 +75,9 @@ const ImageClassifier = () => {
 			<video
 				autoPlay
 				loop
-				src="/vida_transparent.webm"
+				src="/walking.webm"
 				muted={true}
-				height="600"
+				height="100%"
 				style={{ position: "absolute", left: 0, transitionProperty: "transform", transitionDuration: "1s", bottom: 0 }}
 				id="model"
 			/>
