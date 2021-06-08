@@ -14,8 +14,6 @@ const ImageClassifier = () => {
 	let webcamElement = camera.current;
 
 	const run = async () => {
-		// net = await mobilenet.load();
-		// net = await handpose.load();
 		net = await bodyPix.load();
 		const webcam = await tf.data.webcam(webcamElement, {
 			resizeWidth,
@@ -23,36 +21,18 @@ const ImageClassifier = () => {
 		});
 		while (true) {
 			const img = await webcam.capture();
-			// const result = await net.classify(img);
-
-			// if (figures.current) {
-			// 	figures.current.innerText = `prediction : ${result[0].className} \n probability : ${result[0].probability}`;
-			// }
-			// const predictions = await net.estimateHands(img);
-			// if (predictions[0]) {
-			// 	const keypoints = predictions[0].landmarks;
-			// 	const [x, y, z] = keypoints[0];
-			// 	console.log("Keypoint:", x, y, z);
-			// }
-			// for (let i = 0; i < predictions.length; i++) {
-			// 	const keypoints = predictions[i].landmarks;
-
-			// 	// Log hand keypoints.
-			// 	for (let i = 0; i < keypoints.length; i++) {
-			// 		const [x, y, z] = keypoints[i];
-			// 		console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
-			// 	}
-			// }
 
 			const segmentation = await net.segmentPerson(img);
 			if (segmentation?.allPoses[0]) {
-				// keypoint 0 = nose
+				// keypoint 0 = nose, 1 = lefteye 2 = righteye
+				// console.log(segmentation.allPoses[0]);
 				let posXReversed = (figures.current.innerText = segmentation.allPoses[0].keypoints[1].position.x);
 				let posXPercentage = (resizeWidth - posXReversed) / resizeWidth;
 				figures.current.innerText = posXPercentage.toFixed(2) + "%";
-				let youn = document.getElementById("youn");
+				let model = document.getElementById("model");
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-				youn.setAttribute("style", `position: absolute; left:${deviceWidth * posXPercentage}px; height: 300px`);
+				// model.setAttribute("style", `position: absolute; left:${deviceWidth * posXPercentage}px; height: 600px`);
+				model.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
 			}
 
 			img.dispose();
@@ -68,6 +48,15 @@ const ImageClassifier = () => {
 
 	return (
 		<div style={{ display: "flex", flexDirection: "column" }}>
+			<video
+				autoPlay
+				muted
+				loop
+				id="background"
+				style={{ position: "fixed", left: 0, top: 0, minWidth: "100vw", minHeight: "100vh" }}
+			>
+				<source src="rain.mp4" type="video/mp4"></source>
+			</video>
 			<div ref={figures} style={{ fontSize: 30 }}></div>
 			<video
 				autoPlay
@@ -79,6 +68,7 @@ const ImageClassifier = () => {
 				style={{
 					transform: "scaleX(-1)",
 					WebkitTransform: "scaleX(-1)",
+					visibility: "hidden",
 				}}
 			/>
 			<video
@@ -86,9 +76,9 @@ const ImageClassifier = () => {
 				loop
 				src="/vida_transparent.webm"
 				muted={true}
-				height="300"
-				style={{ position: "absolute", left: 0 }}
-				id="youn"
+				height="600"
+				style={{ position: "absolute", left: 0, transitionProperty: "transform", transitionDuration: "1s" }}
+				id="model"
 			/>
 		</div>
 	);

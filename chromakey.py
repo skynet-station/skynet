@@ -1,4 +1,4 @@
-# 한번에 투명도랑 같이 영상 저장이 안돼서 일단 이미지로 다운받고 ffmpeg -i %05d.png output.webm 명령어로 투명영상으로 합성해야 한다.
+# 한번에 투명도랑 같이 영상 저장이 안돼서 일단 이미지로 다운받고 ffmpeg -i %05d.png output.webm 명령어로 투명영상으로 합성해야 한다. 영상퀄리티가 떨어진다싶으면 추가옵션 ㄱㄱ
 
 import numpy as np
 import cv2
