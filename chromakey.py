@@ -27,10 +27,11 @@ w = math.floor(cap1.get(cv2.CAP_PROP_FRAME_WIDTH))
 h = math.floor(cap1.get(cv2.CAP_PROP_FRAME_HEIGHT))
 frame_cnt1 = math.floor(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
 frame_cnt2 = math.floor(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
-fps = math.floor(cap1.get(cv2.CAP_PROP_FPS))
-print("fps:", fps)
+# fps = math.floor(cap1.get(cv2.CAP_PROP_FPS))
+# print("fps:", fps)
 
-delay = int(1000 / fps)
+
+# delay = int(1000 / fps)
 
 do_composit = True
 
@@ -47,31 +48,32 @@ while True:
     if do_composit:
         frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2BGRA)
         hsv = cv2.cvtColor(frame1, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, (30,50,70), (90,255,255))
+        mask = cv2.inRange(hsv, (24,30,30), (90,255,255))
         cv2.copyTo(transparent, mask, frame1)
                 
-    cv2.imshow('frame', frame1)
+    # cv2.imshow('frame', frame1)
     img_rgba = cv2.cvtColor(frame1, cv2.COLOR_BGRA2RGBA)
-    print(img_rgba)
     hsv = cv2.cvtColor(frame1, cv2.COLOR_BGR2HSV)
     
-    key = cv2.waitKey(delay)
+    # key = cv2.waitKey(delay)
     
     cv2.imwrite(os.path.join(dirPath,pre_filename, '{0:05d}.png'.format(imgIdx)), frame1)
     # cv2.imwrite(os.path.join(dirPath,'output', '{0:05d}.png'.format(imgIdx)), frame1)
     
     imgIdx += 1
     
-    if key == ord(' '):
-        do_composit = not do_composit
-    elif key == 27:
-        break
+    # if key == ord(' '):
+    #     do_composit = not do_composit
+    # elif key == 27:
+    #     break
     
 cap1.release()
 cv2.destroyAllWindows()
 
 # subprocess.run(["cd " + pre_filename, "ffmpeg -i %05d.png output.webm"])
-os.system("ffmpeg -i " + "./" + pre_filename + "/" +  "%05d.png " + pre_filename + ".webm")
+# ffmpeg -i video.mp4 -f mp3 -ab 192000 -vn music.mp3
+os.system("ffmpeg -i " + filename + " -f mp3 -ab 192000 -vn " + pre_filename + ".mp3")
+os.system("ffmpeg -framerate 30 -i " + "./" + pre_filename + "/" +  "%05d.png -i " + pre_filename + ".mp3 " + pre_filename + ".webm")
 
 # print(return_frames)
 
