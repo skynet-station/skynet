@@ -26,9 +26,9 @@ const ImageClassifier = () => {
 			if (segmentation?.allPoses[0]) {
 				// keypoint 0 = nose, 1 = lefteye 2 = righteye
 				// console.log(segmentation.allPoses[0]);
-				let posXReversed = (figures.current.innerText = segmentation.allPoses[0].keypoints[1].position.x);
+				let posXReversed = segmentation.allPoses[0].keypoints[1].position.x;
 				let posXPercentage = (resizeWidth - posXReversed) / resizeWidth;
-				figures.current.innerText = posXPercentage.toFixed(2) + "%";
+				// figures.current.innerText = posXPercentage.toFixed(2) + "%";
 				let model = document.getElementById("model");
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				// model.setAttribute("style", `position: absolute; left:${deviceWidth * posXPercentage}px; height: 600px`);
@@ -48,7 +48,7 @@ const ImageClassifier = () => {
 
 	return (
 		<div style={{ display: "flex", flexDirection: "column" }}>
-			<video
+			{/* <video
 				autoPlay
 				muted
 				loop
@@ -56,8 +56,9 @@ const ImageClassifier = () => {
 				style={{ position: "fixed", left: 0, top: 0, minWidth: "100vw", minHeight: "100vh" }}
 			>
 				<source src="rain.mp4" type="video/mp4"></source>
-			</video>
-			<div ref={figures} style={{ fontSize: 30 }}></div>
+			</video> */}
+			<img src="/oilstation.png" style={{ width: "100vw", height: "100vh" }} />
+			{/* <div ref={figures} style={{ fontSize: 30 }}></div> */}
 			<video
 				autoPlay
 				playsInline
@@ -68,7 +69,7 @@ const ImageClassifier = () => {
 				style={{
 					transform: "scaleX(-1)",
 					WebkitTransform: "scaleX(-1)",
-					visibility: "hidden",
+					display: "none",
 				}}
 			/>
 			<video
@@ -77,7 +78,7 @@ const ImageClassifier = () => {
 				src="/vida_transparent.webm"
 				muted={true}
 				height="600"
-				style={{ position: "absolute", left: 0, transitionProperty: "transform", transitionDuration: "1s" }}
+				style={{ position: "absolute", left: 0, transitionProperty: "transform", transitionDuration: "1s", bottom: 0 }}
 				id="model"
 			/>
 		</div>
