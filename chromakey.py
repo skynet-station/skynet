@@ -5,11 +5,16 @@ import cv2
 import math
 import os
 import sys
+import subprocess
 from moviepy.editor import *
+
+filename = "vida.mp4"
+pre_filename = filename.split('.')[0]
+os.system("mkdir " + pre_filename)
 
 path = os.path.realpath(__file__);
 dirPath = path.split(__file__)[0];
-videoPath = os.path.join(dirPath, "vida.mp4")
+videoPath = os.path.join(dirPath, filename)
 backgroundPath = os.path.join(dirPath, "future.png")
 cap1 = cv2.VideoCapture(videoPath)
 
@@ -52,7 +57,8 @@ while True:
     
     key = cv2.waitKey(delay)
     
-    cv2.imwrite(os.path.join(dirPath,'output', '{0:05d}.png'.format(imgIdx)), frame1)
+    cv2.imwrite(os.path.join(dirPath,pre_filename, '{0:05d}.png'.format(imgIdx)), frame1)
+    # cv2.imwrite(os.path.join(dirPath,'output', '{0:05d}.png'.format(imgIdx)), frame1)
     
     imgIdx += 1
     
@@ -63,6 +69,9 @@ while True:
     
 cap1.release()
 cv2.destroyAllWindows()
+
+# subprocess.run(["cd " + pre_filename, "ffmpeg -i %05d.png output.webm"])
+os.system("ffmpeg -i " + "./" + pre_filename + "/" +  "%05d.png " + pre_filename + ".webm")
 
 # print(return_frames)
 
