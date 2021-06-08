@@ -4,7 +4,7 @@
 # Dependency directories
 node_modules/
 
-public/*
+public/youn.mp4
 
 package-lock.json
 
@@ -14,5 +14,7 @@ yarn-debug.log*
 yarn-error.log*
 
 skynet-1577ccb40f1d.json
+
+output/*
 
 .env

@@ -46,7 +46,8 @@ const ImageClassifier = () => {
 
 			const segmentation = await net.segmentPerson(img);
 			if (segmentation?.allPoses[0]) {
-				let posXReversed = (figures.current.innerText = segmentation.allPoses[0].keypoints[0].position.x);
+				// keypoint 0 = nose
+				let posXReversed = (figures.current.innerText = segmentation.allPoses[0].keypoints[1].position.x);
 				let posXPercentage = (resizeWidth - posXReversed) / resizeWidth;
 				figures.current.innerText = posXPercentage.toFixed(2) + "%";
 				let youn = document.getElementById("youn");
@@ -80,7 +81,15 @@ const ImageClassifier = () => {
 					WebkitTransform: "scaleX(-1)",
 				}}
 			/>
-			<video autoPlay loop src="/youn.mp4" muted={true} height="300" style={{ position: "absolute", left: 0 }} id="youn" />
+			<video
+				autoPlay
+				loop
+				src="/vida_transparent.webm"
+				muted={true}
+				height="300"
+				style={{ position: "absolute", left: 0 }}
+				id="youn"
+			/>
 		</div>
 	);
 };
