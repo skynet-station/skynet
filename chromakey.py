@@ -8,7 +8,7 @@ import sys
 import subprocess
 from moviepy.editor import *
 
-filename = "vida.mp4"
+filename = "test.mp4"
 pre_filename = filename.split('.')[0]
 os.system("mkdir " + pre_filename)
 

@@ -26,8 +26,9 @@ const ImageClassifier = () => {
 			if (segmentation?.allPoses[0]) {
 				// keypoint 0 = nose, 1 = lefteye 2 = righteye
 				// console.log(segmentation.allPoses[0]);
-				let posXReversed = segmentation.allPoses[0].keypoints[1].position.x;
-				let posXPercentage = (resizeWidth - posXReversed) / resizeWidth;
+				let posXReversed =
+					(segmentation.allPoses[0].keypoints[1].position.x + segmentation.allPoses[0].keypoints[2].position.x) / 2;
+				let posXPercentage = (resizeWidth / 2 - posXReversed) / resizeWidth;
 				// figures.current.innerText = posXPercentage.toFixed(2) + "%";
 				let model = document.getElementById("model");
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
@@ -75,7 +76,7 @@ const ImageClassifier = () => {
 			<video
 				autoPlay
 				loop
-				src="/walking.webm"
+				src="/test.webm"
 				muted={true}
 				height="100%"
 				style={{ position: "absolute", left: 0, transitionProperty: "transform", transitionDuration: "1s", bottom: 0 }}
