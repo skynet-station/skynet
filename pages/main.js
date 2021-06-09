@@ -4,12 +4,12 @@ import AudioStreamer from '../lib/AudioHandler';
 const Main = () => {
 
     const [recording, setRecording] = useState(false)
-    const [text, setText] = useState("")
+    const [videoUrl, setVideoUrl] = useState("")
 
     function startRecording () {
         setRecording(true)
         AudioStreamer.initRecording((data) => {
-           setText(data.results[0].alternatives[0].transcript)
+           setVideoUrl(data)
         }, (error) => {
             console.error('Error when recording', error);
             setRecording(false)
@@ -25,7 +25,10 @@ const Main = () => {
       <div> 
         <button onClick={() => startRecording()}> Start Recording </button>
         <button onClick={() => stop()}> End Recording </button>
-        <h1> {text} </h1>
+        <div>
+            <video width="1000px" height="1000px" key={videoUrl} src={videoUrl} controls autoPlay/>
+
+         </div> 
     </div>
   );
 };
