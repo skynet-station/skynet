@@ -9,7 +9,8 @@ const speechToEventMap = {
     "온도": "weather",
     "행사": "special",
     "예": "yes",
-    "아니요": "no"
+    "아니요": "no",
+    "춤": "sexy"
 
 } 
 
