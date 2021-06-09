@@ -58,7 +58,8 @@ const ImageClassifier = () => {
 			>
 				<source src="rain.mp4" type="video/mp4"></source>
 			</video> */}
-			<img src="/oilstation.png" style={{ width: "100vw", height: "100vh" }} />
+			{/* <img src="/oilstation2.png" style={{ width: "100vw", height: "100vh" }} /> */}
+			<img src="/club.png" style={{ width: "100vw", height: "100vh" }} />
 			{/* <div ref={figures} style={{ fontSize: 30 }}></div> */}
 			<video
 				autoPlay
@@ -76,8 +77,8 @@ const ImageClassifier = () => {
 			<video
 				autoPlay
 				loop
-				src="/test.webm"
-				muted={false}
+				src="/sexy.webm"
+				muted={true}
 				height="100%"
 				style={{ position: "absolute", left: 0, transitionProperty: "transform", transitionDuration: "1s", bottom: 0 }}
 				id="model"
