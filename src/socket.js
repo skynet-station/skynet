@@ -20,6 +20,7 @@ module.exports = function (http) {
 
 		// End the audio stream
 		socket.on('endStream', function() {
+			console.log('stopping recognition')
 			stopStreamRecognition();	
 		});
 	});

@@ -1,7 +1,5 @@
 const speech = require('@google-cloud/speech');
-const prevEvent = require('./chatbot/prevEvent');
-const ResponseGenerator = require('./chatbot/ResponseGenerator');
-const SpeechToEventMap = require('./chatbot/SpeechToEventMap');
+const speechToEventMap = require('./chatbot/keywords/speechKeywords')
 
 
 let speechClient = new speech.SpeechClient({
@@ -10,7 +8,7 @@ let speechClient = new speech.SpeechClient({
 
 const speechContextsElement = {
   phrases: ['주유'],
-  boost: 20.0,
+  boost: 100.0,
 };
 
 let options = {
@@ -37,10 +35,9 @@ function startStreamRecognition (client) {
         stopStreamRecognition();
       })
       .on('data', (data) => {
-
           const response  = processSpeechData(data)
+          console.log('what is my response', response, data.results[0].alternatives[0].transcript)
           client.emit('response', response);
-
 
           // if end of utterance, let's restart stream
           // this is a small hack. After 65 seconds of silence, the stream will still throw an error for speech length limit
@@ -72,22 +69,18 @@ module.exports = {
 }
 
 
-function processSpeechData (data) {
-  const speechToEventMap = SpeechToEventMap(data)
-  const event = speechToEventMap.analyzeSpeech()
-  const responseGenerator = ResponseGenerator(event)
-  updateGlobalEvent(event)
+function processSpeechData (speechData) {
+  const speech = speechData.results[0].alternatives[0].transcript
+  const keywords = speechToEventMap
 
-  const response = responseGenerator.generateResponse(prevEvent.nthInteraction)
-
-  return response
-}
-
-function updateGlobalEvent (event) {
-  if (prevEvent.event === event) {
-    prevEvent.nthInteraction += 1
-  } else {
-    prevEvent.event = event
-    prevEvent.nthInteraction = 1
+  for (const [key, value] of Object.entries(keywords)) {
+      const regex = new RegExp(key,"g")
+      const found = speech.match(regex)
+      if (found) {
+          return value
+      }
   }
+
+  return 'fail'
+
 }
