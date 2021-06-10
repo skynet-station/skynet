@@ -65,6 +65,7 @@ const Main = () => {
 	const [backgroundOpacity, setBackgroundOpacity] = useState(0);
 	const [choices, setChoices] = useState([]);
 	const [showChoices, setShowChoies] = useState(false);
+	const [audio, setAudio] = useState();
 
 	// useEffect( () => {
 	//     const scenario = ScenarioContext.initialize()
@@ -94,7 +95,7 @@ const Main = () => {
 		setRecording(true);
 		AudioStreamer.initRecording(
 			(data) => {
-				const { video, image, choices } = generateResponse(data, scenario);
+				const { video, image, choices, audio } = generateResponse(data, scenario);
 				stop();
 				setShowChoies(false);
 				setVideoOpacity(0);
@@ -102,6 +103,9 @@ const Main = () => {
 				setVideoUrl(video);
 				setBackgroundOpacity(0);
 				setChoices(choices);
+				if (audio) {
+					setAudio(audio);
+				}
 				setTimeout(() => {
 					setVideoTransitionDuration("0.5s");
 					setVideoOpacity(1);
@@ -126,6 +130,7 @@ const Main = () => {
 		console.log("getNextResponse");
 		loadStanding();
 		setShowChoies(true);
+		setAudio(null);
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
 		} else {
@@ -254,6 +259,7 @@ const Main = () => {
 					))}
 				</div>
 			)}
+			<audio src={audio} autoPlay loop />
 		</div>
 	);
 };
