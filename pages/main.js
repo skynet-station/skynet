@@ -49,7 +49,7 @@ const Main = () => {
 		run();
 	}, [camera]);
 
-	const [loopVideo, setLoopVideo] = useState(false);
+	const [videoLoop, setVideoLoop] = useState(false);
 	const [recording, setRecording] = useState(false);
 	const [videoUrl, setVideoUrl] = useState("");
 	const [videoOpacity, setVideoOpacity] = useState(0);
@@ -85,7 +85,14 @@ const Main = () => {
 			(data) => {
 				const video = generateResponse(data, scenario);
 				stop();
+				setVideoOpacity(0);
+				setVideoTransitionDuration(0);
 				setVideoUrl(video);
+				setTimeout(() => {
+					setVideoTransitionDuration("1s");
+					setVideoOpacity(1);
+					setVideoLoop(false);
+				}, 300);
 			},
 			(error) => {
 				console.error("Error when recording", error);
@@ -117,7 +124,7 @@ const Main = () => {
 			setVideoUrl("./standing.webm");
 			setTimeout(() => {
 				setVideoOpacity(1);
-				setLoopVideo(true);
+				setVideoLoop(true);
 				setVideoTransitionDuration("1s");
 			}, 300);
 		}, 1000);
@@ -172,7 +179,7 @@ const Main = () => {
 				key={videoUrl}
 				src={videoUrl}
 				ref={video}
-				loop={loopVideo}
+				loop={videoLoop}
 				onEnded={() => getNextResponse()}
 				autoPlay
 			/>
