@@ -105,6 +105,8 @@ const Main = () => {
 				setChoices(choices);
 				if (audio) {
 					setAudio(audio);
+				} else {
+					setAudio(null);
 				}
 				setTimeout(() => {
 					setVideoTransitionDuration("0.5s");
@@ -259,7 +261,7 @@ const Main = () => {
 					))}
 				</div>
 			)}
-			<audio src={audio} autoPlay loop />
+			<audio src={audio} autoPlay />
 		</div>
 	);
 };
