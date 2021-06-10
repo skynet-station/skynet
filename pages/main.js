@@ -56,6 +56,7 @@ const Main = () => {
 	const [scenario, setScenario] = useState({});
 	const [videoTransitionDuration, setVideoTransitionDuration] = useState(0);
 	const [backgroundImage, setBackgroundImage] = useState("/oilstation.png");
+	const [backgroundOpacity, setBackgroundOpacity] = useState(0);
 
 	// useEffect( () => {
 	//     const scenario = ScenarioContext.initialize()
@@ -74,9 +75,9 @@ const Main = () => {
 		setVideoUrl("./start.webm");
 		setTimeout(() => {
 			setVideoOpacity(1);
+			setBackgroundOpacity(1);
 			setVideoTransitionDuration("0.5s");
 		}, 100);
-		// setVideoOpacity(1);
 	}
 
 	function startRecording() {
@@ -89,11 +90,13 @@ const Main = () => {
 				setVideoOpacity(0);
 				setVideoTransitionDuration(0);
 				setVideoUrl(video);
-				setBackgroundImage(image);
+				setBackgroundOpacity(0);
 				setTimeout(() => {
 					setVideoTransitionDuration("0.5s");
 					setVideoOpacity(1);
 					setVideoLoop(false);
+					setBackgroundImage(image);
+					setBackgroundOpacity(1);
 				}, 300);
 			},
 			(error) => {
@@ -134,16 +137,11 @@ const Main = () => {
 		<div
 			style={{
 				height: "100vh",
-				backgroundImage: `url(${backgroundImage})`,
-				backgroundRepeat: "no-repeat",
-				backgroundSize: "cover",
-				transitionDuration: "1s",
 			}}
 		>
 			<img
 				src={backgroundImage}
 				style={{
-					display: videoUrl ? "block" : "none",
 					position: "fixed",
 					top: 0,
 					left: 0,
@@ -151,7 +149,8 @@ const Main = () => {
 					height: "100vh",
 					zIndex: 0,
 					transitionProperty: "all",
-					transitionDuration: "2s",
+					transitionDuration: "1s",
+					opacity: backgroundOpacity,
 				}}
 			/>
 			<div
@@ -161,6 +160,7 @@ const Main = () => {
 					justifyContent: "center",
 					alignItems: "center",
 					flexDirection: "column",
+					zIndex: 10,
 				}}
 			>
 				<button
@@ -177,7 +177,7 @@ const Main = () => {
 						border: "none",
 						boxShadow: "0px 1px 10px 3px grey",
 						borderRadius: "10px",
-						zIndex: 1,
+						zIndex: 10,
 					}}
 				>
 					시작하기
@@ -194,7 +194,7 @@ const Main = () => {
 					transitionDuration: videoTransitionDuration,
 					position: "absolute",
 					left: 0,
-					zIndex: 0,
+					zIndex: 1,
 					// top: 0,
 					bottom: 0,
 				}}
