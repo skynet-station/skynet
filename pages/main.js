@@ -122,14 +122,12 @@ const Main = () => {
 		videoElement = video.current;
 		setVideoTransitionDuration(0);
 		setVideoOpacity(0);
+		setVideoUrl("./standing.webm");
 		setTimeout(() => {
-			setVideoUrl("./standing.webm");
-			setTimeout(() => {
-				setVideoOpacity(1);
-				setVideoLoop(true);
-				setVideoTransitionDuration("0.5s");
-			}, 200);
-		}, 1000);
+			setVideoOpacity(1);
+			setVideoLoop(true);
+			setVideoTransitionDuration("0.5s");
+		}, 200);
 	}
 
 	return (
@@ -139,6 +137,7 @@ const Main = () => {
 				backgroundImage: `url(${backgroundImage})`,
 				backgroundRepeat: "no-repeat",
 				backgroundSize: "cover",
+				transitionDuration: "1s",
 			}}
 		>
 			<img
