@@ -55,6 +55,7 @@ const Main = () => {
 	const [videoOpacity, setVideoOpacity] = useState(0);
 	const [scenario, setScenario] = useState({});
 	const [videoTransitionDuration, setVideoTransitionDuration] = useState(0);
+	const [backgroundImage, setBackgroundImage] = useState("/oilstation2.png");
 
 	// useEffect( () => {
 	//     const scenario = ScenarioContext.initialize()
@@ -83,11 +84,12 @@ const Main = () => {
 		setRecording(true);
 		AudioStreamer.initRecording(
 			(data) => {
-				const video = generateResponse(data, scenario);
+				const { video, image } = generateResponse(data, scenario);
 				stop();
 				setVideoOpacity(0);
 				setVideoTransitionDuration(0);
 				setVideoUrl(video);
+				setBackgroundImage(image);
 				setTimeout(() => {
 					setVideoTransitionDuration("1s");
 					setVideoOpacity(1);
@@ -126,12 +128,33 @@ const Main = () => {
 				setVideoOpacity(1);
 				setVideoLoop(true);
 				setVideoTransitionDuration("1s");
-			}, 300);
+			}, 200);
 		}, 1000);
 	}
 
 	return (
-		<div style={{ height: "100vh" }}>
+		<div
+			style={{
+				height: "100vh",
+				backgroundImage: `url(${backgroundImage})`,
+				backgroundRepeat: "no-repeat",
+				backgroundSize: "cover",
+			}}
+		>
+			<img
+				src={backgroundImage}
+				style={{
+					display: videoUrl ? "block" : "none",
+					position: "fixed",
+					top: 0,
+					left: 0,
+					width: "100vw",
+					height: "100vh",
+					zIndex: 0,
+					transitionProperty: "all",
+					transitionDuration: "2s",
+				}}
+			/>
 			<div
 				style={{
 					display: !!videoUrl ? "none" : "flex",
