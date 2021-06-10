@@ -55,7 +55,7 @@ const Main = () => {
 	const [videoOpacity, setVideoOpacity] = useState(0);
 	const [scenario, setScenario] = useState({});
 	const [videoTransitionDuration, setVideoTransitionDuration] = useState(0);
-	const [backgroundImage, setBackgroundImage] = useState("/oilstation2.png");
+	const [backgroundImage, setBackgroundImage] = useState("/oilstation.png");
 
 	// useEffect( () => {
 	//     const scenario = ScenarioContext.initialize()
@@ -195,7 +195,8 @@ const Main = () => {
 					position: "absolute",
 					left: 0,
 					zIndex: 0,
-					top: 0,
+					// top: 0,
+					bottom: 0,
 				}}
 				height="100%"
 				key={videoUrl}
