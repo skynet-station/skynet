@@ -57,14 +57,19 @@ const Main = () => {
     }
     
   return (
-      <div> 
-        <button onClick={() => initialize()} >initialize </button>
+      <div style={{height: '100vh'}}>
+          <div style={{display: !!videoUrl ? 'none' : 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+            <button onClick={() => initialize()} 
+            style={{width: '10vw', height: '6vw', left: '45vw', top: '47vh', cursor: 'pointer', backgroundColor: 'dodgerblue', color: 'white', fontWeight: 'bold', border: 'none', boxShadow: '0px 1px 10px 3px grey', borderRadius:'10px'}} >
+                시작하기 
+            </button>
+            <div style={{textAlign: 'center', color: 'grey'}}>
+                <p>시작하기 전에 마이크와 카메라 기능을 켜놓았는지 확인해주세요!</p>
+            </div>
+          </div>
     
-        <div>
-            <video width="1000px" height="1000px" key={videoUrl} src={videoUrl} onEnded={()=> getNextResponse()} controls autoPlay/>
-
-         </div> 
-    </div>
+        <video style={{display: !!videoUrl ? 'block' : 'none'}} height="100%" key={videoUrl} src={videoUrl} onEnded={()=> getNextResponse()} autoPlay/>
+      </div>
   );
 };
 
