@@ -241,7 +241,7 @@ const Main = () => {
 						position: "absolute",
 						left: "50vw",
 						zIndex: 20,
-						bottom: "60vh",
+						bottom: "40vh",
 						width: "20vw",
 						backgroundColor: "white",
 						borderRadius: "30px",
