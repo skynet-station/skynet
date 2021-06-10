@@ -16,6 +16,8 @@ const Main = () => {
 	let webcamElement = camera.current;
 	const video = React.useRef();
 	let videoElement = video.current;
+	const choicesRef = React.useRef();
+	let choicesElement = choicesRef.current;
 
 	const run = async () => {
 		net = await bodyPix.load();
@@ -35,6 +37,10 @@ const Main = () => {
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				videoElement = video.current;
 				videoElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
+				choicesElement = choicesRef.current;
+				if (choicesElement) {
+					choicesElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
+				}
 			}
 
 			img.dispose();
@@ -57,6 +63,8 @@ const Main = () => {
 	const [videoTransitionDuration, setVideoTransitionDuration] = useState(0);
 	const [backgroundImage, setBackgroundImage] = useState("/oilstation.png");
 	const [backgroundOpacity, setBackgroundOpacity] = useState(0);
+	const [choices, setChoices] = useState([]);
+	const [showChoices, setShowChoies] = useState(false);
 
 	// useEffect( () => {
 	//     const scenario = ScenarioContext.initialize()
@@ -73,6 +81,7 @@ const Main = () => {
 		videoElement = video.current;
 		setScenario(scenario);
 		setVideoUrl("./start.webm");
+		setChoices(["기름 넣으러 왔어요", "출차 부탁드립니다", "오늘 날씨 알려주세요", "오늘 열리는 행사가 있나요?"]);
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setBackgroundOpacity(1);
@@ -85,12 +94,14 @@ const Main = () => {
 		setRecording(true);
 		AudioStreamer.initRecording(
 			(data) => {
-				const { video, image } = generateResponse(data, scenario);
+				const { video, image, choices } = generateResponse(data, scenario);
 				stop();
+				setShowChoies(false);
 				setVideoOpacity(0);
 				setVideoTransitionDuration(0);
 				setVideoUrl(video);
 				setBackgroundOpacity(0);
+				setChoices(choices);
 				setTimeout(() => {
 					setVideoTransitionDuration("0.5s");
 					setVideoOpacity(1);
@@ -114,6 +125,7 @@ const Main = () => {
 	function getNextResponse() {
 		console.log("getNextResponse");
 		loadStanding();
+		setShowChoies(true);
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
 		} else {
@@ -195,7 +207,6 @@ const Main = () => {
 					position: "absolute",
 					left: 0,
 					zIndex: 1,
-					// top: 0,
 					bottom: 0,
 				}}
 				height="100%"
@@ -220,6 +231,29 @@ const Main = () => {
 					display: "none",
 				}}
 			/>
+
+			{showChoices && (
+				<div
+					style={{
+						opacity: videoOpacity,
+						transitionProperty: "all",
+						transitionDuration: videoTransitionDuration,
+						position: "absolute",
+						left: "50vw",
+						zIndex: 20,
+						bottom: "60vh",
+						width: "20vw",
+						backgroundColor: "white",
+						borderRadius: "30px",
+						padding: 10,
+					}}
+					ref={choicesRef}
+				>
+					{choices?.map((x, idx) => (
+						<p>{`${idx + 1} :  ${x}`}</p>
+					))}
+				</div>
+			)}
 		</div>
 	);
 };
