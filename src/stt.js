@@ -45,7 +45,7 @@ function startStreamRecognition (client) {
               const response  = detected.eventName
               console.log('immediately send to client as word detected', response, data.results[0].alternatives[0].transcript)
               client.emit('response', response);
-            }
+          }
   
           // if end of utterance, let's restart stream
           // this is a small hack. After 65 seconds of silence, the stream will still throw an error for speech length limit
