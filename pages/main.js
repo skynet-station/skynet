@@ -75,7 +75,7 @@ const Main = () => {
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setVideoTransitionDuration("0.5s");
-		}, 300);
+		}, 100);
 		// setVideoOpacity(1);
 	}
 
