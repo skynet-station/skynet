@@ -74,7 +74,7 @@ const Main = () => {
 		setVideoUrl("./start.webm");
 		setTimeout(() => {
 			setVideoOpacity(1);
-			setVideoTransitionDuration("1s");
+			setVideoTransitionDuration("0.5s");
 		}, 300);
 		// setVideoOpacity(1);
 	}
@@ -91,7 +91,7 @@ const Main = () => {
 				setVideoUrl(video);
 				setBackgroundImage(image);
 				setTimeout(() => {
-					setVideoTransitionDuration("1s");
+					setVideoTransitionDuration("0.5s");
 					setVideoOpacity(1);
 					setVideoLoop(false);
 				}, 300);
@@ -127,7 +127,7 @@ const Main = () => {
 			setTimeout(() => {
 				setVideoOpacity(1);
 				setVideoLoop(true);
-				setVideoTransitionDuration("1s");
+				setVideoTransitionDuration("0.5s");
 			}, 200);
 		}, 1000);
 	}
