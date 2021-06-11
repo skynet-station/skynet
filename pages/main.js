@@ -15,8 +15,8 @@ const Main = () => {
 	let net;
 	const camera = React.useRef();
 	let webcamElement = camera.current;
-	const video = React.useRef();
-	let videoElement = video.current;
+	const videoRef = React.useRef();
+	let videoElement = videoRef.current;
 	const choicesRef = React.useRef();
 	let choicesElement = choicesRef.current;
 	const audioRef = React.useRef();
@@ -78,7 +78,7 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		if (!keypoints?.size) {
+		if (!keypoints?.size || !moveAI) {
 			return;
 		}
 		if (keypoints.size > 90 && !isInitialized) {
@@ -88,7 +88,7 @@ const Main = () => {
 		let posXReversed = (keypoints.leftEyeX + keypoints.rightEyeX) / 2;
 		let posXPercentage = (resizeWidth / 2 - posXReversed) / resizeWidth;
 		const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-		videoElement = video.current;
+		videoElement = videoRef.current;
 		if (videoElement) {
 			videoElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
 		}
@@ -122,7 +122,7 @@ const Main = () => {
 		console.log("initialize");
 		setIsInitialized(true);
 		const scenario = ScenarioContext.initialize();
-		videoElement = video.current;
+		videoElement = videoRef.current;
 		setScenario(scenario);
 		setVideoUrl("./start.webm");
 		setChoices(["기름 넣으러 왔어요", "출차 부탁드립니다", "오늘 날씨 알려주세요", "오늘 열리는 행사가 있나요?", "춤 춰줘"]);
@@ -160,7 +160,35 @@ const Main = () => {
 					setVideoLoop(false);
 				}
 
+				if (video === "./gas_1.webm") {
+					setMoveAI(false);
+					const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+					videoElement = videoRef.current;
+					if (videoElement) {
+						videoElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
+					}
+					choicesElement = choicesRef.current;
+					if (choicesElement) {
+						choicesElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
+					}
+				} else {
+					setMoveAI(true);
+				}
+
 				setTimeout(() => {
+					// if (video === "./gas_1.webm") {
+					// 	const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+					// 	videoElement = videoRef.current;
+					// 	if (videoElement) {
+					// 		videoElement.style.transform = `translate3d(${deviceWidth}px, 0, 0)`;
+					// 	}
+					// 	choicesElement = choicesRef.current;
+					// 	if (choicesElement) {
+					// 		choicesElement.style.transform = `translate3d(${deviceWidth}px, 0, 0)`;
+					// 	}
+					// } else {
+					// 	setMoveAI(true);
+					// }
 					setVideoTransitionDuration("0.5s");
 					setVideoOpacity(1);
 					setVideoLoop(false);
@@ -185,6 +213,7 @@ const Main = () => {
 		loadStanding();
 		setShowChoices(true);
 		setAudio(null);
+		setMoveAI(true);
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
 		} else {
@@ -193,7 +222,7 @@ const Main = () => {
 	}
 
 	function loadStanding() {
-		videoElement = video.current;
+		videoElement = videoRef.current;
 		setVideoTransitionDuration(0);
 		setVideoOpacity(0);
 		setVideoUrl("./standing.webm");
@@ -281,7 +310,7 @@ const Main = () => {
 				height="100%"
 				key={videoUrl}
 				src={videoUrl}
-				ref={video}
+				ref={videoRef}
 				loop={videoLoop}
 				onEnded={() => getNextResponse()}
 				autoPlay
