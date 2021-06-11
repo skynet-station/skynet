@@ -24,6 +24,8 @@ const Main = () => {
 	let rainImageElement = rainImageRef.current;
 	const carImageRef = React.useRef();
 	let carImageElement = carImageRef.current;
+	const receiptImageRef = React.useRef();
+	let receiptImageElement = receiptImageRef.current;
 	const [videoLoop, setVideoLoop] = useState(false);
 	const [recording, setRecording] = useState(false);
 	const [videoUrl, setVideoUrl] = useState("");
@@ -61,6 +63,14 @@ const Main = () => {
 		setKeypoints();
 		setAudio(null);
 		setFaceRecFail(0);
+		rainImageElement = rainImageRef.current;
+		rainImageElement.style.display = "none";
+		carImageElement = carImageRef.current;
+		carImageElement.style.display = "none";
+		receiptImageElement = receiptImageRef.current;
+		receiptImageElement.style.display = "none";
+		audioElement = audioRef.current;
+		audioElement?.pause();
 	}
 
 	const run = async () => {
@@ -191,7 +201,7 @@ const Main = () => {
 			audioElement?.pause();
 		}
 
-		if (video === "./gas_1.webm" || video === "./leave_1.webm" || video === "./weather_1.webm") {
+		if (video === "./gas_1.webm" || video === "./leave_1.webm" || video === "./weather_1.webm" || video === "./gas_3.webm") {
 			setMoveAI(false);
 			const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 			videoElement = videoRef.current;
@@ -204,6 +214,9 @@ const Main = () => {
 			} else if (video === "./gas_1.webm") {
 				carImageElement = carImageRef.current;
 				carImageElement.style.display = "block";
+			} else if (video === "./gas_3.webm") {
+				receiptImageElement = receiptImageRef.current;
+				receiptImageElement.style.display = "block";
 			}
 		} else {
 			setMoveAI(true);
@@ -239,11 +252,13 @@ const Main = () => {
 		rainImageElement.style.display = "none";
 		carImageElement = carImageRef.current;
 		carImageElement.style.display = "none";
+		receiptImageElement = receiptImageRef.current;
+		receiptImageElement.style.display = "none";
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
 			setVideoOpacity(0);
 			setVideoTransitionDuration(0);
-			setVideoUrl("./standing_left_2.webm");
+			setVideoUrl("./walking_left_cut.webm");
 			setTimeout(() => {
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				videoElement = videoRef.current;
@@ -256,18 +271,25 @@ const Main = () => {
 			setTimeout(() => {
 				setVideoLoop(false);
 				setMoveAI(false);
-				setVideoTransitionDuration("10s");
+				setVideoTransitionDuration("6s");
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				videoElement = videoRef.current;
 				if (videoElement) {
-					videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
+					videoElement.style.transform = `translate3d(${deviceWidth * -0.2}px, 0, 0)`;
 				}
 				return;
 			}, 300);
 			setTimeout(() => {
 				recordingCallback(true);
-			}, 8 * 1000);
-		} else if (videoUrl === "./sexy.webm") {
+			}, 4 * 1000);
+		} else if (
+			videoUrl === "./sexy.webm" ||
+			videoUrl === "./gas_3.webm" ||
+			videoUrl === "./leave_3.webm" ||
+			videoUrl === "./special_2_yes.webm" ||
+			videoUrl === "./weather_2_yes.webm" ||
+			videoUrl === "./weather_2_no.webm"
+		) {
 			setAudio(null);
 			clearAI();
 		} else {
@@ -429,7 +451,7 @@ const Main = () => {
 
 			<img
 				src={"/weather_forecast.png"}
-				style={{ position: "fixed", left: "20vw", top: "30vh", display: "none" }}
+				style={{ position: "fixed", left: "20vw", top: "20vh", display: "none" }}
 				width={"30%"}
 				heigh={"30%"}
 				zIndex={100}
@@ -442,6 +464,14 @@ const Main = () => {
 				heigh={"40%"}
 				zIndex={100}
 				ref={carImageRef}
+			/>
+			<img
+				src={"/45000.png"}
+				style={{ position: "fixed", left: "20vw", top: "30vh", display: "none" }}
+				width={"40%"}
+				heigh={"40%"}
+				zIndex={100}
+				ref={receiptImageRef}
 			/>
 		</div>
 	);
