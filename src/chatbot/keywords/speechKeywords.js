@@ -10,6 +10,7 @@ const speechToEventMap = {
     "기름": "gas",
     "출차": "leave",
     "출처": "leave",
+    "춘천": "leave",
     "가고 싶어요": "leave",
     "차": "leave",
     "날씨": "weather",
