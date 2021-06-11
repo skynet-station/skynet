@@ -35,6 +35,7 @@ const Main = () => {
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [keypoints, setKeypoints] = useState();
 	const [showButton, setShowButton] = useState(true);
+	const [faceRecFail, setFaceRecFail] = useState(0);
 
 	function clearAI() {
 		stop();
@@ -54,6 +55,8 @@ const Main = () => {
 		setVideoOpacity(0);
 		setMoveAI(true);
 		setKeypoints();
+		setAudio(null);
+		setFaceRecFail(0);
 	}
 
 	const run = async () => {
@@ -103,7 +106,10 @@ const Main = () => {
 
 	React.useEffect(() => {
 		if (!keypoints?.size || keypoints.size <= 10) {
-			clearAI();
+			faceRecFail++;
+			if (faceRecFail > 5) {
+				clearAI();
+			}
 		}
 		if (!keypoints?.size || !moveAI) {
 			return;
