@@ -35,6 +35,7 @@ const Main = () => {
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [keypoints, setKeypoints] = useState();
 	const [showButton, setShowButton] = useState(true);
+	const [faceRecFail, setFaceRecFail] = useState(0);
 
 	function clearAI() {
 		stop();
@@ -54,6 +55,8 @@ const Main = () => {
 		setVideoOpacity(0);
 		setMoveAI(true);
 		setKeypoints();
+		setAudio(null);
+		setFaceRecFail(0);
 	}
 
 	const run = async () => {
@@ -102,8 +105,12 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		if (!keypoints?.size || keypoints.size <= 20) {
-			clearAI();
+		if (!keypoints?.size || keypoints.size <= 10) {
+			console.log(faceRecFail);
+			setFaceRecFail(faceRecFail + 1);
+			if (faceRecFail > 30) {
+				clearAI();
+			}
 		}
 		if (!keypoints?.size || !moveAI) {
 			return;
@@ -111,6 +118,7 @@ const Main = () => {
 		if (keypoints.size > 90 && !isInitialized) {
 			initialize();
 		}
+		setFaceRecFail(0);
 
 		let posXReversed = (keypoints.leftEyeX + keypoints.rightEyeX) / 2;
 		let posXPercentage = (resizeWidth / 2 - posXReversed) / resizeWidth;
@@ -157,7 +165,7 @@ const Main = () => {
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setBackgroundOpacity(1);
-			setVideoTransitionDuration("0.5s");
+			setVideoTransitionDuration("1.5s");
 		}, 100);
 	}
 
@@ -200,7 +208,7 @@ const Main = () => {
 		}
 
 		setTimeout(() => {
-			setVideoTransitionDuration("0.5s");
+			setVideoTransitionDuration("1.5s");
 			setVideoOpacity(1);
 			setVideoLoop(false);
 			setBackgroundImage(image);
@@ -273,7 +281,7 @@ const Main = () => {
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setVideoLoop(true);
-			setVideoTransitionDuration("0.5s");
+			setVideoTransitionDuration("1.5s");
 		}, 200);
 	}
 
@@ -406,6 +414,14 @@ const Main = () => {
 				</div>
 			)}
 			<audio src={audio} autoPlay ref={audioRef} />
+
+			<img
+				src={"/raining_forecast.png"}
+				style={{ position: "fixed", right: "20vw", top: "30vh" }}
+				width={"30%"}
+				heigh={"30%"}
+				zIndex={100}
+			/>
 		</div>
 	);
 };
