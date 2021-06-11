@@ -102,7 +102,7 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		if (!keypoints?.size || keypoints.size <= 20) {
+		if (!keypoints?.size || keypoints.size <= 10) {
 			clearAI();
 		}
 		if (!keypoints?.size || !moveAI) {
