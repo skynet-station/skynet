@@ -8,6 +8,8 @@ const speechToEventMap = {
     "주여": "gas",
     "죽여": "gas",
     "기름": "gas",
+    "집에": "gas",
+    "지금": "gas",
     "출차": "leave",
     "출처": "leave",
     "춘천": "leave",
