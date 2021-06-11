@@ -61,6 +61,9 @@ const Main = () => {
 						size = _size;
 					}
 				}
+				if (!keypoints) {
+					return;
+				}
 				setKeypoints({
 					leftEyeX: keypoints[1].position.x,
 					leftEyeY: keypoints[1].position.y,
@@ -160,7 +163,7 @@ const Main = () => {
 					setVideoLoop(false);
 				}
 
-				if (video === "./gas_1.webm") {
+				if (video === "./gas_1.webm" || video === "./leave_1.webm") {
 					setMoveAI(false);
 					const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 					videoElement = videoRef.current;
