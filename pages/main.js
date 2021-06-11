@@ -190,11 +190,6 @@ const Main = () => {
 			audioElement = audioRef.current;
 			audioElement?.pause();
 		}
-		if (video === "./sexy.webm") {
-			setVideoLoop(true);
-		} else {
-			setVideoLoop(false);
-		}
 
 		if (video === "./gas_1.webm" || video === "./leave_1.webm" || video === "./weather_1.webm") {
 			setMoveAI(false);
@@ -272,6 +267,9 @@ const Main = () => {
 			setTimeout(() => {
 				recordingCallback(true);
 			}, 8 * 1000);
+		} else if (videoUrl === "./sexy.webm") {
+			setAudio(null);
+			clearAI();
 		} else {
 			loadStanding();
 			setMoveAI(true);
@@ -448,9 +446,5 @@ const Main = () => {
 		</div>
 	);
 };
-
-function Container() {
-	return React.useMemo(() => ((<Main />), []));
-}
 
 export default Main;
