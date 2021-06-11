@@ -106,8 +106,9 @@ const Main = () => {
 
 	React.useEffect(() => {
 		if (!keypoints?.size || keypoints.size <= 10) {
-			faceRecFail++;
-			if (faceRecFail > 5) {
+			console.log(faceRecFail);
+			setFaceRecFail(faceRecFail + 1);
+			if (faceRecFail > 30) {
 				clearAI();
 			}
 		}
@@ -117,6 +118,7 @@ const Main = () => {
 		if (keypoints.size > 90 && !isInitialized) {
 			initialize();
 		}
+		setFaceRecFail(0);
 
 		let posXReversed = (keypoints.leftEyeX + keypoints.rightEyeX) / 2;
 		let posXPercentage = (resizeWidth / 2 - posXReversed) / resizeWidth;
