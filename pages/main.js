@@ -34,6 +34,27 @@ const Main = () => {
 	const [moveAI, setMoveAI] = useState(true);
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [keypoints, setKeypoints] = useState();
+	const [showButton, setShowButton] = useState(true);
+
+	function clearAI() {
+		stop();
+		setVideoLoop(false);
+		setRecording(false);
+		setVideoUrl("");
+		setVideoOpacity(0);
+		setScenario({});
+		setVideoTransitionDuration(0);
+		setBackgroundImage("/future_background1.jpg");
+		setBackgroundOpacity(1);
+		setChoices([]);
+		setShowChoices(false);
+		setIsInitialized(false);
+		setVideoLoop(false);
+		setRecording(false);
+		setVideoOpacity(0);
+		setMoveAI(true);
+		setKeypoints();
+	}
 
 	const run = async () => {
 		console.log("run");
@@ -70,6 +91,8 @@ const Main = () => {
 						size: size,
 					});
 				}
+			} else {
+				setKeypoints({ size: null });
 			}
 
 			img.dispose();
@@ -79,6 +102,9 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
+		if (!keypoints?.size || keypoints.size <= 50) {
+			clearAI();
+		}
 		if (!keypoints?.size || !moveAI) {
 			return;
 		}
@@ -122,6 +148,7 @@ const Main = () => {
 	function initialize() {
 		console.log("initialize");
 		setIsInitialized(true);
+		setShowButton(false);
 		const scenario = ScenarioContext.initialize();
 		videoElement = videoRef.current;
 		setScenario(scenario);
@@ -286,7 +313,7 @@ const Main = () => {
 					alignItems: "center",
 					flexDirection: "column",
 					zIndex: 10,
-					display: isInitialized ? "none" : "flex",
+					display: showButton ? "flex" : "none",
 				}}
 			>
 				<button
