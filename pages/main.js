@@ -60,14 +60,16 @@ const Main = () => {
 						size = _size;
 					}
 				}
-				setKeypoints({
-					leftEyeX: keypoints[1].position.x,
-					leftEyeY: keypoints[1].position.y,
-					rightEyeX: keypoints[2].position.x,
-					rightEyeY: keypoints[2].position.y,
-					// leftShoulderY: keypoints[5].position.y,
-					size: size,
-				});
+				if (keypoints) {
+					setKeypoints({
+						leftEyeX: keypoints[1].position.x,
+						leftEyeY: keypoints[1].position.y,
+						rightEyeX: keypoints[2].position.x,
+						rightEyeY: keypoints[2].position.y,
+						// leftShoulderY: keypoints[5].position.y,
+						size: size,
+					});
+				}
 			}
 
 			img.dispose();
@@ -132,74 +134,60 @@ const Main = () => {
 		}, 100);
 	}
 
+	const recordingCallback = (data) => {
+		const { video, image, choices, audio } = generateResponse(data, scenario);
+		stop();
+		setShowChoices(false);
+		setVideoOpacity(0);
+		setVideoTransitionDuration(0);
+		setVideoUrl(video);
+		setBackgroundOpacity(0);
+		setChoices(choices);
+		if (audio) {
+			setAudio(audio);
+			audioElement = audioRef.current;
+			audioElement?.play();
+		} else {
+			audioElement = audioRef.current;
+			audioElement?.pause();
+		}
+		if (video === "./sexy.webm") {
+			setVideoLoop(true);
+		} else {
+			setVideoLoop(false);
+		}
+
+		if (video === "./gas_1.webm" || video === "./leave_1.webm") {
+			setMoveAI(false);
+			const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+			videoElement = videoRef.current;
+			if (videoElement) {
+				videoElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
+			}
+			// choicesElement = choicesRef.current;
+			// if (choicesElement) {
+			// 	choicesElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
+			// }
+		} else {
+			setMoveAI(true);
+		}
+
+		setTimeout(() => {
+			setVideoTransitionDuration("0.5s");
+			setVideoOpacity(1);
+			setVideoLoop(false);
+			setBackgroundImage(image);
+			setBackgroundOpacity(1);
+		}, 300);
+	};
+
 	function startRecording() {
 		console.log("audio start recording...", scenario);
 		setRecording(true);
-		AudioStreamer.initRecording(
-			(data) => {
-				const { video, image, choices, audio } = generateResponse(data, scenario);
-				stop();
-				setShowChoices(false);
-				setVideoOpacity(0);
-				setVideoTransitionDuration(0);
-				setVideoUrl(video);
-				setBackgroundOpacity(0);
-				setChoices(choices);
-				if (audio) {
-					setAudio(audio);
-					audioElement = audioRef.current;
-					audioElement?.play();
-				} else {
-					audioElement = audioRef.current;
-					audioElement?.pause();
-				}
-				if (video === "./sexy.webm") {
-					setVideoLoop(true);
-				} else {
-					setVideoLoop(false);
-				}
-
-				if (video === "./gas_1.webm") {
-					setMoveAI(false);
-					const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-					videoElement = videoRef.current;
-					if (videoElement) {
-						videoElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
-					}
-					choicesElement = choicesRef.current;
-					if (choicesElement) {
-						choicesElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
-					}
-				} else {
-					setMoveAI(true);
-				}
-
-				setTimeout(() => {
-					// if (video === "./gas_1.webm") {
-					// 	const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-					// 	videoElement = videoRef.current;
-					// 	if (videoElement) {
-					// 		videoElement.style.transform = `translate3d(${deviceWidth}px, 0, 0)`;
-					// 	}
-					// 	choicesElement = choicesRef.current;
-					// 	if (choicesElement) {
-					// 		choicesElement.style.transform = `translate3d(${deviceWidth}px, 0, 0)`;
-					// 	}
-					// } else {
-					// 	setMoveAI(true);
-					// }
-					setVideoTransitionDuration("0.5s");
-					setVideoOpacity(1);
-					setVideoLoop(false);
-					setBackgroundImage(image);
-					setBackgroundOpacity(1);
-				}, 300);
-			},
-			(error) => {
-				console.error("Error when recording", error);
-				setRecording(false);
-			}
-		);
+		AudioStreamer.initRecording(recordingCallback, (error) => {
+			console.error("Error when recording", error);
+			setRecording(false);
+		});
 	}
 
 	function stop() {
@@ -209,16 +197,76 @@ const Main = () => {
 
 	function getNextResponse() {
 		console.log("getNextResponse");
-		loadStanding();
-		setShowChoices(true);
 		setAudio(null);
-		setMoveAI(true);
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
+			setVideoOpacity(0);
+			setVideoTransitionDuration(0);
+			setVideoUrl("./walking_left.webm");
+			setTimeout(() => {
+				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+				videoElement = videoRef.current;
+				if (videoElement) {
+					videoElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
+				}
+				setVideoOpacity(1);
+				return;
+			}, 100);
+			setTimeout(() => {
+				setVideoLoop(false);
+				setMoveAI(false);
+				setVideoTransitionDuration("10s");
+				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+				videoElement = videoRef.current;
+				if (videoElement) {
+					videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
+				}
+				return;
+			}, 300);
+			setTimeout(() => {
+				recordingCallback(true);
+			}, 8 * 1000);
+		} else if (scenario.event === "leave" && scenario.depth === 2) {
+			recordingCallback(true);
+			/// do motion
+			// setVideoOpacity(0);
+			// setVideoTransitionDuration(0);
+			// setVideoUrl("./leave_2.webm");
+			// setTimeout(() => {
+			// 	const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+			// 	videoElement = videoRef.current;
+			// 	if (videoElement) {
+			// 		videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
+			// 	}
+			// 	return;
+			// }, 100);
+			// setTimeout(() => {
+			// 	setVideoOpacity(1);
+			// 	setVideoLoop(false);
+			// 	setMoveAI(false);
+			// 	setVideoTransitionDuration("0.5s");
+			// 	const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+			// 	videoElement = videoRef.current;
+			// 	if (videoElement) {
+			// 		videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
+			// 	}
+			// 	return;
+			// }, 300);
+			setTimeout(() => {
+				ScenarioContext.setScenarioContext("leave", 2);
+				ScenarioContext.render();
+			}, 10 * 1000);
 		} else {
+			loadStanding();
+			setMoveAI(true);
 			startRecording();
+			setShowChoices(true);
 		}
 	}
+
+	React.useEffect(() => {
+		console.log("scenario:", scenario);
+	}, [scenario]);
 
 	function loadStanding() {
 		videoElement = videoRef.current;
