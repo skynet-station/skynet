@@ -280,7 +280,12 @@ const Main = () => {
 			setTimeout(() => {
 				recordingCallback(true);
 			}, 4 * 1000);
-		} else if (videoUrl === "./sexy.webm") {
+		} else if (
+			videoUrl === "./sexy.webm" ||
+			videoUrl === "./gas_3.webm" ||
+			videoUrl === "./leave_3.webm" ||
+			videoUrl === "./special_2_yes.webm"
+		) {
 			setAudio(null);
 			clearAI();
 		} else {
