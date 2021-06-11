@@ -20,6 +20,10 @@ const Main = () => {
 	let choicesElement = choicesRef.current;
 	const audioRef = React.useRef();
 	let audioElement = audioRef.current;
+	const rainImageRef = React.useRef();
+	let rainImageElement = rainImageRef.current;
+	const carImageRef = React.useRef();
+	let carImageElement = carImageRef.current;
 	const [videoLoop, setVideoLoop] = useState(false);
 	const [recording, setRecording] = useState(false);
 	const [videoUrl, setVideoUrl] = useState("");
@@ -192,17 +196,20 @@ const Main = () => {
 			setVideoLoop(false);
 		}
 
-		if (video === "./gas_1.webm" || video === "./leave_1.webm") {
+		if (video === "./gas_1.webm" || video === "./leave_1.webm" || video === "./weather_1.webm") {
 			setMoveAI(false);
 			const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 			videoElement = videoRef.current;
 			if (videoElement) {
 				videoElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
 			}
-			// choicesElement = choicesRef.current;
-			// if (choicesElement) {
-			// 	choicesElement.style.transform = `translate3d(${deviceWidth * 0.4}px, 0, 0)`;
-			// }
+			if (video === "./weather_1.webm") {
+				rainImageElement = rainImageRef.current;
+				rainImageElement.style.display = "block";
+			} else if (video === "./gas_1.webm") {
+				carImageElement = carImageRef.current;
+				carImageElement.style.display = "block";
+			}
 		} else {
 			setMoveAI(true);
 		}
@@ -233,6 +240,10 @@ const Main = () => {
 	function getNextResponse() {
 		console.log("getNextResponse");
 		setAudio(null);
+		rainImageElement = rainImageRef.current;
+		rainImageElement.style.display = "none";
+		carImageElement = carImageRef.current;
+		carImageElement.style.display = "none";
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
 			setVideoOpacity(0);
@@ -274,6 +285,8 @@ const Main = () => {
 	}, [scenario]);
 
 	function loadStanding() {
+		rainImageElement = rainImageRef.current;
+		rainImageElement.style.display = "none";
 		videoElement = videoRef.current;
 		setVideoTransitionDuration(0);
 		setVideoOpacity(0);
@@ -314,6 +327,7 @@ const Main = () => {
 					opacity: backgroundOpacity,
 				}}
 			/>
+
 			<div
 				style={{
 					height: "100vh",
@@ -416,11 +430,20 @@ const Main = () => {
 			<audio src={audio} autoPlay ref={audioRef} />
 
 			<img
-				src={"/raining_forecast.png"}
-				style={{ position: "fixed", left: "20vw", top: "30vh" }}
+				src={"/weather_forecast.png"}
+				style={{ position: "fixed", left: "20vw", top: "30vh", display: "none" }}
 				width={"30%"}
 				heigh={"30%"}
 				zIndex={100}
+				ref={rainImageRef}
+			/>
+			<img
+				src={"/future_car.png"}
+				style={{ position: "fixed", left: "20vw", top: "30vh", display: "none" }}
+				width={"40%"}
+				heigh={"40%"}
+				zIndex={100}
+				ref={carImageRef}
 			/>
 		</div>
 	);
