@@ -23,6 +23,12 @@ module.exports = function (http) {
 			console.log('stopping recognition')
 			stopStreamRecognition();	
 		});
+
+
+		socket.on('disconnect', function() {
+			console.log(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }), 'a user disconnected.');
+			socket.disconnect();
+		})
 	});
 
 	return io;

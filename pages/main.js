@@ -6,6 +6,7 @@ import generateResponse from "../lib/ResponseGenerator";
 
 import * as bodyPix from "@tensorflow-models/body-pix";
 import * as tf from "@tensorflow/tfjs";
+import socket from '../lib/SocketContext'
 
 const resizeWidth = 220;
 const resizeHeight = 227;
@@ -52,11 +53,14 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		AudioStreamer.stopRecording();
 		webcamElement = camera.current;
 		console.log("webcamElement:", webcamElement);
 		run();
 	}, [camera]);
+
+	React.useEffect(() => {
+		AudioStreamer.stopRecording();
+	}, []);
 
 	const [videoLoop, setVideoLoop] = useState(false);
 	const [recording, setRecording] = useState(false);
