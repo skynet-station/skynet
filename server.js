@@ -23,10 +23,11 @@ const http_port = process.env.HTTP_PORT || 3000;
 const https_port = process.env.HTTPS_PORT || 8443;
 
 let https_options; 
-if(fs.existsSync('wildcard_tevi_ai_until_2021_09_22.key')){
+if(fs.existsSync('./privkey.pem')){
 	https_options = {
-		key: fs.readFileSync('wildcard_tevi_ai_until_2021_09_22.key'),
-		cert: fs.readFileSync('wildcard_tevi_ai_fullchain_until_2021_09_22.crt')
+		key: fs.readFileSync('./privkey.pem'),
+		cert: fs.readFileSync('./cert.pem'),
+		ca: fs.readFileSync("./chain.pem")
 	}
 }
 
