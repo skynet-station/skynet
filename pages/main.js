@@ -102,7 +102,7 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		if (!keypoints?.size || keypoints.size <= 50) {
+		if (!keypoints?.size || keypoints.size <= 20) {
 			clearAI();
 		}
 		if (!keypoints?.size || !moveAI) {
@@ -351,7 +351,7 @@ const Main = () => {
 					zIndex: 1,
 					bottom: 0,
 				}}
-				height="100%"
+				height="70%"
 				key={videoUrl}
 				src={videoUrl}
 				ref={videoRef}
@@ -386,14 +386,15 @@ const Main = () => {
 						transitionProperty: "all",
 						transitionDuration: videoTransitionDuration,
 						position: "absolute",
-						left: "50vw",
+						left: "35vw",
 						zIndex: 20,
-						bottom: "50vh",
+						bottom: "20vh",
 						width: "230px",
 						backgroundColor: "#ffffff8a",
 						borderRadius: "30px",
 						padding: 10,
 						boxShadow: "0px 1px 10px 3px #1e90ff9e",
+						fontSize: "1vw",
 					}}
 					ref={choicesRef}
 				>
