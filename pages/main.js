@@ -24,6 +24,8 @@ const Main = () => {
 	let rainImageElement = rainImageRef.current;
 	const carImageRef = React.useRef();
 	let carImageElement = carImageRef.current;
+	const receiptImageRef = React.useRef();
+	let receiptImageElement = receiptImageRef.current;
 	const [videoLoop, setVideoLoop] = useState(false);
 	const [recording, setRecording] = useState(false);
 	const [videoUrl, setVideoUrl] = useState("");
@@ -191,7 +193,7 @@ const Main = () => {
 			audioElement?.pause();
 		}
 
-		if (video === "./gas_1.webm" || video === "./leave_1.webm" || video === "./weather_1.webm") {
+		if (video === "./gas_1.webm" || video === "./leave_1.webm" || video === "./weather_1.webm" || video === "./gas_3.webm") {
 			setMoveAI(false);
 			const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 			videoElement = videoRef.current;
@@ -204,6 +206,9 @@ const Main = () => {
 			} else if (video === "./gas_1.webm") {
 				carImageElement = carImageRef.current;
 				carImageElement.style.display = "block";
+			} else if (video === "./gas_3.webm") {
+				receiptImageElement = receiptImageRef.current;
+				receiptImageElement.style.display = "block";
 			}
 		} else {
 			setMoveAI(true);
@@ -239,6 +244,8 @@ const Main = () => {
 		rainImageElement.style.display = "none";
 		carImageElement = carImageRef.current;
 		carImageElement.style.display = "none";
+		receiptImageElement = receiptImageRef.current;
+		receiptImageElement.style.display = "none";
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
 			setVideoOpacity(0);
@@ -442,6 +449,14 @@ const Main = () => {
 				heigh={"40%"}
 				zIndex={100}
 				ref={carImageRef}
+			/>
+			<img
+				src={"/45000.png"}
+				style={{ position: "fixed", left: "20vw", top: "30vh", display: "none" }}
+				width={"40%"}
+				heigh={"40%"}
+				zIndex={100}
+				ref={receiptImageRef}
 			/>
 		</div>
 	);
