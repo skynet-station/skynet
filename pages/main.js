@@ -414,6 +414,14 @@ const Main = () => {
 				</div>
 			)}
 			<audio src={audio} autoPlay ref={audioRef} />
+
+			<img
+				src={"/raining_forecast.png"}
+				style={{ position: "fixed", right: "20vw", top: "30vh" }}
+				width={"30%"}
+				heigh={"30%"}
+				zIndex={100}
+			/>
 		</div>
 	);
 };
