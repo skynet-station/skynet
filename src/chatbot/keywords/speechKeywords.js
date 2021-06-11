@@ -15,6 +15,7 @@ const speechToEventMap = {
     "날씨": "weather",
     "온도": "weather",
     "행사": "special",
+    "회사": "special",
     "예": "yes",
     "아니요": "no",
     "춤": "sexy",
