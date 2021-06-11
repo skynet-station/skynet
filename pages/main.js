@@ -165,7 +165,7 @@ const Main = () => {
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setBackgroundOpacity(1);
-			setVideoTransitionDuration("0.5s");
+			setVideoTransitionDuration("1.5s");
 		}, 100);
 	}
 
@@ -208,7 +208,7 @@ const Main = () => {
 		}
 
 		setTimeout(() => {
-			setVideoTransitionDuration("0.5s");
+			setVideoTransitionDuration("1.5s");
 			setVideoOpacity(1);
 			setVideoLoop(false);
 			setBackgroundImage(image);
@@ -281,7 +281,7 @@ const Main = () => {
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setVideoLoop(true);
-			setVideoTransitionDuration("0.5s");
+			setVideoTransitionDuration("1.5s");
 		}, 200);
 	}
 
