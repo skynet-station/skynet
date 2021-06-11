@@ -69,6 +69,8 @@ const Main = () => {
 		carImageElement.style.display = "none";
 		receiptImageElement = receiptImageRef.current;
 		receiptImageElement.style.display = "none";
+		audioElement = audioRef.current;
+		audioElement?.pause();
 	}
 
 	const run = async () => {
@@ -284,7 +286,9 @@ const Main = () => {
 			videoUrl === "./sexy.webm" ||
 			videoUrl === "./gas_3.webm" ||
 			videoUrl === "./leave_3.webm" ||
-			videoUrl === "./special_2_yes.webm"
+			videoUrl === "./special_2_yes.webm" ||
+			videoUrl === "./weather_2_yes.webm" ||
+			videoUrl === "./weather_2_no.webm"
 		) {
 			setAudio(null);
 			clearAI();
