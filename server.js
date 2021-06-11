@@ -60,7 +60,7 @@ app.prepare().then(() => {
 			if (err) throw err
 			console.log('> Ready on https:' + https_port)
 		})
-		const https_socket_connection = require('./src/socket')(http_server)
+		const https_socket_connection = require('./src/socket')(https_server)
 
 	}
 
