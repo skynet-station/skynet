@@ -32,6 +32,7 @@ if(fs.existsSync('./privkey.pem')){
 }
 
 const env = process.env.DOT_ENV || process.env.NODE_ENV || 'local';
+console.log('env',env)
 
 app.prepare().then(() => {
     
@@ -48,19 +49,26 @@ app.prepare().then(() => {
 	});
 
 
-	const http_server = http.createServer(server).listen(http_port, (err) => {
+	let http_server;
+	let https_server;
+	http_server = http.createServer(server).listen(http_port, (err) => {
 		if (err) throw err
 		console.log('> Ready on http:'+http_port)
-		const socket_connection = require('./src/socket')(http_server)
 	})
 
 
 	if (https_options) {
-		const https_server = https.createServer(https_options, server).listen(https_port, (err) => {
+		https_server = https.createServer(https_options, server).listen(https_port, (err) => {
 			if (err) throw err
 			console.log('> Ready on https:' + https_port)
 		})
-
 	}
+
+	console.log('node env', process.env.NODE_ENV)
+
+	const socket_server = process.env.NODE_ENV === 'production' ? https_server : http_server
+	const socket_connection = require('./src/socket')(socket_server)
+	
+
 
 })
