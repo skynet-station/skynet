@@ -417,7 +417,7 @@ const Main = () => {
 
 			<img
 				src={"/raining_forecast.png"}
-				style={{ position: "fixed", right: "20vw", top: "30vh" }}
+				style={{ position: "fixed", left: "20vw", top: "30vh" }}
 				width={"30%"}
 				heigh={"30%"}
 				zIndex={100}
