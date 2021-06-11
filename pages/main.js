@@ -256,7 +256,7 @@ const Main = () => {
 			/// do motion
 			setVideoOpacity(0);
 			setVideoTransitionDuration(0);
-			setVideoUrl("./standing_left_2.webm");
+			setVideoUrl("./walking_left_cut.webm");
 			setTimeout(() => {
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				videoElement = videoRef.current;
@@ -269,17 +269,17 @@ const Main = () => {
 			setTimeout(() => {
 				setVideoLoop(false);
 				setMoveAI(false);
-				setVideoTransitionDuration("10s");
+				setVideoTransitionDuration("6s");
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				videoElement = videoRef.current;
 				if (videoElement) {
-					videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
+					videoElement.style.transform = `translate3d(${deviceWidth * -0.2}px, 0, 0)`;
 				}
 				return;
 			}, 300);
 			setTimeout(() => {
 				recordingCallback(true);
-			}, 8 * 1000);
+			}, 4 * 1000);
 		} else if (videoUrl === "./sexy.webm") {
 			setAudio(null);
 			clearAI();
