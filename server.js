@@ -46,29 +46,21 @@ app.prepare().then(() => {
 
 		handle(req, res, parsedUrl);
 	});
-	let http_server;
-	let https_server;
 
-	http_server = http.createServer(server).listen(http_port, (err) => {
+
+	const http_server = http.createServer(server).listen(http_port, (err) => {
 		if (err) throw err
 		console.log('> Ready on http:'+http_port)
+		const socket_connection = require('./src/socket')(http_server)
 	})
 
 
 	if (https_options) {
-		https_server = https.createServer(https_options, server).listen(https_port, (err) => {
+		const https_server = https.createServer(https_options, server).listen(https_port, (err) => {
 			if (err) throw err
 			console.log('> Ready on https:' + https_port)
 		})
 
 	}
-
-	if (https_server) {
-		const https_socket_connection = require('./src/socket')(https_server)
-	} else {
-		const socket_connection = require('./src/socket')(http_server)
-	}
-
-
 
 })
