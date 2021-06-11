@@ -63,6 +63,12 @@ const Main = () => {
 		setKeypoints();
 		setAudio(null);
 		setFaceRecFail(0);
+		rainImageElement = rainImageRef.current;
+		rainImageElement.style.display = "none";
+		carImageElement = carImageRef.current;
+		carImageElement.style.display = "none";
+		receiptImageElement = receiptImageRef.current;
+		receiptImageElement.style.display = "none";
 	}
 
 	const run = async () => {
@@ -436,7 +442,7 @@ const Main = () => {
 
 			<img
 				src={"/weather_forecast.png"}
-				style={{ position: "fixed", left: "20vw", top: "30vh", display: "none" }}
+				style={{ position: "fixed", left: "20vw", top: "20vh", display: "none" }}
 				width={"30%"}
 				heigh={"30%"}
 				zIndex={100}
