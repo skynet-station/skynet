@@ -6,7 +6,7 @@ import generateResponse from "../lib/ResponseGenerator";
 
 import * as bodyPix from "@tensorflow-models/body-pix";
 import * as tf from "@tensorflow/tfjs";
-import socket from '../lib/SocketContext'
+import socket from "../lib/SocketContext";
 
 const resizeWidth = 220;
 const resizeHeight = 227;
@@ -21,29 +21,54 @@ const Main = () => {
 	let choicesElement = choicesRef.current;
 	const audioRef = React.useRef();
 	let audioElement = audioRef.current;
+	const [videoLoop, setVideoLoop] = useState(false);
+	const [recording, setRecording] = useState(false);
+	const [videoUrl, setVideoUrl] = useState("");
+	const [videoOpacity, setVideoOpacity] = useState(0);
+	const [scenario, setScenario] = useState({});
+	const [videoTransitionDuration, setVideoTransitionDuration] = useState(0);
+	const [backgroundImage, setBackgroundImage] = useState("/future_background1.jpg");
+	const [backgroundOpacity, setBackgroundOpacity] = useState(0);
+	const [choices, setChoices] = useState([]);
+	const [showChoices, setShowChoices] = useState(false);
+	const [audio, setAudio] = useState();
+	const [moveAI, setMoveAI] = useState(true);
+	const [isInitialized, setIsInitialized] = useState(false);
+	const [keypoints, setKeypoints] = useState();
 
 	const run = async () => {
+		console.log("run");
 		net = await bodyPix.load();
 		const webcam = await tf.data.webcam(webcamElement, {
 			resizeWidth,
 			resizeHeight,
 		});
 		while (true) {
+			if (!moveAI) {
+				continue;
+			}
 			const img = await webcam.capture();
-
 			const segmentation = await net.segmentPerson(img);
 			if (segmentation?.allPoses[0]) {
-				// keypoint 0 = nose, 1 = lefteye 2 = righteye
-				let posXReversed =
-					(segmentation.allPoses[0].keypoints[1].position.x + segmentation.allPoses[0].keypoints[2].position.x) / 2;
-				let posXPercentage = (resizeWidth / 2 - posXReversed) / resizeWidth;
-				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-				videoElement = video.current;
-				videoElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
-				choicesElement = choicesRef.current;
-				if (choicesElement) {
-					choicesElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
+				let leftEyeY, leftShoulderY, keypoints, _size;
+				let size = 0;
+				for (let i = 0; i < segmentation.allPoses.length; i++) {
+					leftEyeY = segmentation.allPoses[i].keypoints[1].position.y;
+					leftShoulderY = segmentation.allPoses[i].keypoints[5].position.y;
+					_size = leftShoulderY - leftEyeY;
+					if (_size > size) {
+						keypoints = segmentation.allPoses[i].keypoints;
+						size = _size;
+					}
 				}
+				setKeypoints({
+					leftEyeX: keypoints[1].position.x,
+					leftEyeY: keypoints[1].position.y,
+					rightEyeX: keypoints[2].position.x,
+					rightEyeY: keypoints[2].position.y,
+					// leftShoulderY: keypoints[5].position.y,
+					size: size,
+				});
 			}
 
 			img.dispose();
@@ -51,6 +76,27 @@ const Main = () => {
 			await tf.nextFrame();
 		}
 	};
+
+	React.useEffect(() => {
+		if (!keypoints?.size) {
+			return;
+		}
+		if (keypoints.size > 90 && !isInitialized) {
+			initialize();
+		}
+
+		let posXReversed = (keypoints.leftEyeX + keypoints.rightEyeX) / 2;
+		let posXPercentage = (resizeWidth / 2 - posXReversed) / resizeWidth;
+		const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+		videoElement = video.current;
+		if (videoElement) {
+			videoElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
+		}
+		choicesElement = choicesRef.current;
+		if (choicesElement) {
+			choicesElement.style.transform = `translate3d(${deviceWidth * posXPercentage}px, 0, 0)`;
+		}
+	}, [keypoints]);
 
 	React.useEffect(() => {
 		webcamElement = camera.current;
@@ -61,18 +107,6 @@ const Main = () => {
 	React.useEffect(() => {
 		AudioStreamer.stopRecording();
 	}, []);
-
-	const [videoLoop, setVideoLoop] = useState(false);
-	const [recording, setRecording] = useState(false);
-	const [videoUrl, setVideoUrl] = useState("");
-	const [videoOpacity, setVideoOpacity] = useState(0);
-	const [scenario, setScenario] = useState({});
-	const [videoTransitionDuration, setVideoTransitionDuration] = useState(0);
-	const [backgroundImage, setBackgroundImage] = useState("/oilstation.png");
-	const [backgroundOpacity, setBackgroundOpacity] = useState(0);
-	const [choices, setChoices] = useState([]);
-	const [showChoices, setShowChoices] = useState(false);
-	const [audio, setAudio] = useState();
 
 	// useEffect( () => {
 	//     const scenario = ScenarioContext.initialize()
@@ -85,6 +119,8 @@ const Main = () => {
 	};
 
 	function initialize() {
+		console.log("initialize");
+		setIsInitialized(true);
 		const scenario = ScenarioContext.initialize();
 		videoElement = video.current;
 		setScenario(scenario);
@@ -113,10 +149,10 @@ const Main = () => {
 				if (audio) {
 					setAudio(audio);
 					audioElement = audioRef.current;
-					audioElement.play();
+					audioElement?.play();
 				} else {
 					audioElement = audioRef.current;
-					audioElement.pause();
+					audioElement?.pause();
 				}
 				if (video === "./sexy.webm") {
 					setVideoLoop(true);
@@ -168,10 +204,19 @@ const Main = () => {
 		}, 200);
 	}
 
+	function onButtonClick() {
+		setBackgroundOpacity(1);
+		document.getElementById("initializeButton").style.display = "none";
+	}
+
 	return (
 		<div
 			style={{
 				height: "100vh",
+				fontStyle: "fantasy",
+				fontWeight: "600",
+				// transitionProperty: 'all',
+				// transitionDuration: '2s'
 			}}
 		>
 			<img
@@ -190,16 +235,16 @@ const Main = () => {
 			/>
 			<div
 				style={{
-					display: !!videoUrl ? "none" : "flex",
 					height: "100vh",
 					justifyContent: "center",
 					alignItems: "center",
 					flexDirection: "column",
 					zIndex: 10,
+					display: isInitialized ? "none" : "flex",
 				}}
 			>
 				<button
-					onClick={() => initialize()}
+					onClick={onButtonClick}
 					style={{
 						width: "10vw",
 						height: "6vw",
@@ -214,6 +259,7 @@ const Main = () => {
 						borderRadius: "10px",
 						zIndex: 10,
 					}}
+					id="initializeButton"
 				>
 					시작하기
 				</button>
@@ -241,19 +287,24 @@ const Main = () => {
 				autoPlay
 			/>
 
-			<video
-				autoPlay
-				playsInline
-				muted={true}
-				ref={camera}
-				width="870"
-				height="534"
-				style={{
-					transform: "scaleX(-1)",
-					WebkitTransform: "scaleX(-1)",
-					display: "none",
-				}}
-			/>
+			{React.useMemo(
+				() => (
+					<video
+						autoPlay
+						playsInline
+						muted={true}
+						ref={camera}
+						width="870"
+						height="534"
+						style={{
+							transform: "scaleX(-1)",
+							WebkitTransform: "scaleX(-1)",
+							display: "none",
+						}}
+					/>
+				),
+				[]
+			)}
 
 			{showChoices && choices?.length > 0 && (
 				<div
@@ -265,15 +316,18 @@ const Main = () => {
 						left: "50vw",
 						zIndex: 20,
 						bottom: "50vh",
-						width: "20vw",
-						backgroundColor: "white",
+						width: "230px",
+						backgroundColor: "#ffffff8a",
 						borderRadius: "30px",
 						padding: 10,
+						boxShadow: "0px 1px 10px 3px #1e90ff9e",
 					}}
 					ref={choicesRef}
 				>
 					{choices?.map((x, idx) => (
-						<p>{`${idx + 1} :  ${x}`}</p>
+						<p style={{ textAlign: "center" }} key={idx}>
+							{x}
+						</p>
 					))}
 				</div>
 			)}
@@ -281,5 +335,9 @@ const Main = () => {
 		</div>
 	);
 };
+
+function Container() {
+	return React.useMemo(() => ((<Main />), []));
+}
 
 export default Main;
