@@ -18,6 +18,8 @@ const Main = () => {
 	let videoElement = video.current;
 	const choicesRef = React.useRef();
 	let choicesElement = choicesRef.current;
+	const audioRef = React.useRef();
+	let audioElement = audioRef.current;
 
 	const run = async () => {
 		net = await bodyPix.load();
@@ -50,6 +52,7 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
+		AudioStreamer.stopRecording();
 		webcamElement = camera.current;
 		console.log("webcamElement:", webcamElement);
 		run();
@@ -64,7 +67,7 @@ const Main = () => {
 	const [backgroundImage, setBackgroundImage] = useState("/oilstation.png");
 	const [backgroundOpacity, setBackgroundOpacity] = useState(0);
 	const [choices, setChoices] = useState([]);
-	const [showChoices, setShowChoies] = useState(false);
+	const [showChoices, setShowChoices] = useState(false);
 	const [audio, setAudio] = useState();
 
 	// useEffect( () => {
@@ -82,7 +85,7 @@ const Main = () => {
 		videoElement = video.current;
 		setScenario(scenario);
 		setVideoUrl("./start.webm");
-		setChoices(["기름 넣으러 왔어요", "출차 부탁드립니다", "오늘 날씨 알려주세요", "오늘 열리는 행사가 있나요?"]);
+		setChoices(["기름 넣으러 왔어요", "출차 부탁드립니다", "오늘 날씨 알려주세요", "오늘 열리는 행사가 있나요?", "춤 춰줘"]);
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setBackgroundOpacity(1);
@@ -97,7 +100,7 @@ const Main = () => {
 			(data) => {
 				const { video, image, choices, audio } = generateResponse(data, scenario);
 				stop();
-				setShowChoies(false);
+				setShowChoices(false);
 				setVideoOpacity(0);
 				setVideoTransitionDuration(0);
 				setVideoUrl(video);
@@ -105,9 +108,18 @@ const Main = () => {
 				setChoices(choices);
 				if (audio) {
 					setAudio(audio);
+					audioElement = audioRef.current;
+					audioElement.play();
 				} else {
-					setAudio(null);
+					audioElement = audioRef.current;
+					audioElement.pause();
 				}
+				if (video === "./sexy.webm") {
+					setVideoLoop(true);
+				} else {
+					setVideoLoop(false);
+				}
+
 				setTimeout(() => {
 					setVideoTransitionDuration("0.5s");
 					setVideoOpacity(1);
@@ -131,7 +143,7 @@ const Main = () => {
 	function getNextResponse() {
 		console.log("getNextResponse");
 		loadStanding();
-		setShowChoies(true);
+		setShowChoices(true);
 		setAudio(null);
 		if (scenario.event === "leave" && scenario.depth === 1) {
 			/// do motion
@@ -239,7 +251,7 @@ const Main = () => {
 				}}
 			/>
 
-			{showChoices && (
+			{showChoices && choices?.length > 0 && (
 				<div
 					style={{
 						opacity: videoOpacity,
@@ -261,7 +273,7 @@ const Main = () => {
 					))}
 				</div>
 			)}
-			<audio src={audio} autoPlay />
+			<audio src={audio} autoPlay ref={audioRef} />
 		</div>
 	);
 };
