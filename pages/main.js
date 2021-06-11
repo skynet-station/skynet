@@ -203,7 +203,7 @@ const Main = () => {
 			/// do motion
 			setVideoOpacity(0);
 			setVideoTransitionDuration(0);
-			setVideoUrl("./walking_left.webm");
+			setVideoUrl("./standing_left_2.webm");
 			setTimeout(() => {
 				const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
 				videoElement = videoRef.current;
@@ -227,36 +227,6 @@ const Main = () => {
 			setTimeout(() => {
 				recordingCallback(true);
 			}, 8 * 1000);
-		} else if (scenario.event === "leave" && scenario.depth === 2) {
-			recordingCallback(true);
-			/// do motion
-			// setVideoOpacity(0);
-			// setVideoTransitionDuration(0);
-			// setVideoUrl("./leave_2.webm");
-			// setTimeout(() => {
-			// 	const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-			// 	videoElement = videoRef.current;
-			// 	if (videoElement) {
-			// 		videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
-			// 	}
-			// 	return;
-			// }, 100);
-			// setTimeout(() => {
-			// 	setVideoOpacity(1);
-			// 	setVideoLoop(false);
-			// 	setMoveAI(false);
-			// 	setVideoTransitionDuration("0.5s");
-			// 	const deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-			// 	videoElement = videoRef.current;
-			// 	if (videoElement) {
-			// 		videoElement.style.transform = `translate3d(${deviceWidth * -0.3}px, 0, 0)`;
-			// 	}
-			// 	return;
-			// }, 300);
-			setTimeout(() => {
-				ScenarioContext.setScenarioContext("leave", 2);
-				ScenarioContext.render();
-			}, 10 * 1000);
 		} else {
 			loadStanding();
 			setMoveAI(true);
