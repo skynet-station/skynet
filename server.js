@@ -1,5 +1,7 @@
 // server.js
-const { createServer } = require('http')
+require('dotenv').config({ path: './.env' })
+
+// const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
 
@@ -8,24 +10,59 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const port = 3000;
 
-const env = process.env.DOT_ENV || process.env.NODE_ENV || 'local';
-require('dotenv').config({ path: './.env' })
+const express = require('express');
+const server = express()
 
+
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+
+
+const http_port = process.env.HTTP_PORT || 3000;
+const https_port = process.env.HTTPS_PORT || 8443;
+
+let https_options; 
+if(fs.existsSync('wildcard_tevi_ai_until_2021_09_22.key')){
+	https_options = {
+		key: fs.readFileSync('wildcard_tevi_ai_until_2021_09_22.key'),
+		cert: fs.readFileSync('wildcard_tevi_ai_fullchain_until_2021_09_22.crt')
+	}
+}
+
+const env = process.env.DOT_ENV || process.env.NODE_ENV || 'local';
 
 app.prepare().then(() => {
-    const server = createServer( (req, res) => {
+    
+	console.log(` NODE_ENV = ${process.env.NODE_ENV}`)
+	console.log(` BACKEND_URI = ${process.env.BACKEND_URI}`)
+
+	server.all('*', (req, res) => {
 		// Be sure to pass `true` as the second argument to `url.parse`.
 		// This tells it to parse the query portion of the URL.
 		const parsedUrl = parse(req.url, true)
+		const { pathname, query } = parsedUrl
 
-		handle(req, res, parsedUrl)
+		handle(req, res, parsedUrl);
+	});
 
-	}).listen(port, (err) => {
+	const http_server = http.createServer(server).listen(http_port, (err) => {
 		if (err) throw err
-		console.log('> Ready on http://localhost:' + port)
-		console.log(` Deploy mode: ${process.env.NODE_ENV}`)
+		console.log('> Ready on http:'+http_port)
+		const socket_connection = require('./src/socket')(http_server)
+
 	})
 
-  const socket_connection = require('./src/socket')(server)
+
+	if (https_options) {
+		const https_server = https.createServer(https_options, server).listen(https_port, (err) => {
+			if (err) throw err
+			console.log('> Ready on https:' + https_port)
+		})
+		const https_socket_connection = require('./src/socket')(http_server)
+
+	}
+
+
 
 })
