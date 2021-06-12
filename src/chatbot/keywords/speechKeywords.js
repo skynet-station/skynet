@@ -35,6 +35,7 @@ const speechToEventMap = {
     "예": "yes",
     "아니요": "no",
     "춤": "sexy",
+    "춘천": "sexy",
     "네": "yes",
     "그래": "yes",
     "싫어요": "no",
