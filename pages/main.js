@@ -129,7 +129,7 @@ const Main = () => {
 		if (!keypoints?.size || !moveAI) {
 			return;
 		}
-		if (keypoints.size > 90 && !isInitialized) {
+		if (keypoints.size > 40 && !isInitialized) {
 			initialize();
 		}
 		setFaceRecFail(0);
