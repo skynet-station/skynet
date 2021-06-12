@@ -175,7 +175,7 @@ const Main = () => {
 		videoElement = videoRef.current;
 		setScenario(scenario);
 		setVideoUrl("./start.webm");
-		setChoices(["기름 넣으러 왔어요", "출차 부탁드립니다", "오늘 날씨 알려주세요", "오늘 열리는 행사가 있나요?", "춤 춰줘"]);
+		setChoices(["기름 넣으러 왔어요", "차 빼 주세요", "오늘 날씨 알려주세요", "오늘 열리는 행사가 있나요?", "춤 춰줘"]);
 		setTimeout(() => {
 			setVideoOpacity(1);
 			setBackgroundOpacity(1);
