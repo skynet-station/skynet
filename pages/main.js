@@ -431,7 +431,7 @@ const Main = () => {
 						left: "35vw",
 						zIndex: 20,
 						bottom: "20vh",
-						width: "230px",
+						width: "20vw",
 						backgroundColor: "#ffffff8a",
 						borderRadius: "30px",
 						padding: 10,
