@@ -119,7 +119,7 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		if (!keypoints?.size || keypoints.size <= 10) {
+		if (!keypoints?.size || keypoints.size <= 4) {
 			console.log(faceRecFail);
 			setFaceRecFail(faceRecFail + 1);
 			if (faceRecFail > 30) {
@@ -129,7 +129,7 @@ const Main = () => {
 		if (!keypoints?.size || !moveAI) {
 			return;
 		}
-		if (keypoints.size > 90 && !isInitialized) {
+		if (keypoints.size > 40 && !isInitialized) {
 			initialize();
 		}
 		setFaceRecFail(0);
@@ -431,7 +431,7 @@ const Main = () => {
 						left: "35vw",
 						zIndex: 20,
 						bottom: "20vh",
-						width: "230px",
+						width: "20vw",
 						backgroundColor: "#ffffff8a",
 						borderRadius: "30px",
 						padding: 10,
