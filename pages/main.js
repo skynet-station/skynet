@@ -119,7 +119,7 @@ const Main = () => {
 	};
 
 	React.useEffect(() => {
-		if (!keypoints?.size || keypoints.size <= 10) {
+		if (!keypoints?.size || keypoints.size <= 4) {
 			console.log(faceRecFail);
 			setFaceRecFail(faceRecFail + 1);
 			if (faceRecFail > 30) {
